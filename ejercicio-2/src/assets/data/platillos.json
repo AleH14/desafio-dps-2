@@ -1,0 +1,105 @@
+{
+  "platillos": [
+    {
+      "id": 1,
+      "nombre": "Pupusa revuelta",
+      "descripcion": "Tortilla gruesa de maíz rellena de chicharrón, frijoles y queso.",
+      "foto": { "url": "https://media.istockphoto.com/id/1430049425/es/foto/pupusas-caseras-de-ma%C3%ADz-salvadore%C3%B1o.jpg?s=612x612&w=0&k=20&c=x52hGh83hBPfJyd_Ftn6Dijkks4TOCdYWnUtpj00ZTc="},
+      "ingredientes": ["Masa de maíz", "Chicharrón", "Frijoles refritos", "Queso"],
+      "region": "El Salvador",
+      "precio": 1.50,
+      "categoria": "Plato principal"
+    },
+    {
+      "id": 2,
+      "nombre": "Tacos al pastor",
+      "descripcion": "Tacos de carne de cerdo marinada con especias y piña, servidos en tortilla de maíz.",
+      "foto": { "url":"https://img.freepik.com/foto-gratis/tacos-plato-cerca-verduras_23-2148132045.jpg?semt=ais_hybrid&w=740&q=80"},
+      "ingredientes": ["Carne de cerdo", "Piña", "Cebolla", "Cilantro", "Tortilla de maíz"],
+      "region": "México",
+      "precio": 2.00,
+      "categoria": "Plato principal"
+    },
+    {
+      "id": 3,
+      "nombre": "Ceviche peruano",
+      "descripcion": "Pescado fresco marinado en jugo de limón con cebolla morada, ají y cilantro.",
+      "foto": { "url": "https://trexperienceperu.com/sites/default/files/peruvian_ceviche.webp"},
+      "ingredientes": ["Pescado blanco", "Limón", "Cebolla morada", "Ají", "Culantro"],
+      "region": "Perú",
+      "precio": 7.50,
+      "categoria": "Entrada"
+    },
+    {
+      "id": 4,
+      "nombre": "Pizza Margherita",
+      "descripcion": "Pizza italiana con salsa de tomate, mozzarella fresca y albahaca.",
+      "foto": { "url": "https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/5802fab5-fdce-468a-a830-43e8001f5a72/Derivates/c00dc34a-e73d-42f0-a86e-e2fd967d33fe.jpg" },
+      "ingredientes": ["Masa de pizza", "Salsa de tomate", "Mozzarella", "Albahaca"],
+      "region": "Italia — Nápoles",
+      "precio": 8.00,
+      "categoria": "Plato principal"
+    },
+    {
+      "id": 5,
+      "nombre": "Sushi nigiri",
+      "descripcion": "Bocado de arroz avinagrado cubierto con una lámina de pescado fresco.",
+      "foto": { "url": "https://hoturis.com/wp-content/smush-webp/2024/04/three-different-nigiris-salmon-tuna-and-prawn-2023-11-27-05-08-04-utc-1-1-1024x683.jpg.webp"},
+      "ingredientes": ["Arroz para sushi", "Vinagre de arroz", "Pescado crudo", "Alga nori"],
+      "region": "Japón",
+      "precio": 1.80,
+      "categoria": "Plato pequeño"
+    },
+    {
+      "id": 6,
+      "nombre": "Arepa rellena de carne mechada",
+      "descripcion": "Tortilla de maíz blanco rellena de carne deshilachada y queso.",
+      "foto": { "url": "https://media.istockphoto.com/id/924454804/es/foto/reci%C3%A9n-cocinado-arepa-con-carne-asada.jpg?s=612x612&w=0&k=20&c=9Sfdm2GFantkTms52eUrhXttME5Gi22614HNm4BuIII="},
+      "ingredientes": ["Harina de maíz precocida", "Carne de res mechada", "Queso", "Sal"],
+      "region": "Venezuela",
+      "precio": 3.00,
+      "categoria": "Plato principal"
+    },
+    {
+      "id": 7,
+      "nombre": "Croissant",
+      "descripcion": "Pan hojaldrado y crujiente con mantequilla, ideal para desayunos.",
+      "foto": { "url": "https://media.scoolinary.app/blog/images/2022/12/croissant.jpg"},
+      "ingredientes": ["Harina", "Mantequilla", "Levadura", "Leche", "Sal"],
+      "region": "Francia",
+      "precio": 2.50,
+      "categoria": "Panadería"
+    },
+    {
+      "id": 8,
+      "nombre": "Feijoada",
+      "descripcion": "Guiso de frijoles negros con carne de cerdo, acompañado de arroz.",
+      "foto": { "url": "https://www.shutterstock.com/image-photo/brazilian-feijoada-black-beans-sausage-260nw-2548260991.jpg"},
+      "ingredientes": ["Frijoles negros", "Carne de cerdo", "Arroz", "Cebolla", "Ajo"],
+      "region": "Brasil",
+      "precio": 9.00,
+      "categoria": "Plato principal"
+    },
+    {
+      "id": 9,
+      "nombre": "Pad Thai",
+      "descripcion": "Fideos de arroz salteados con huevo, camarones, tofu, brotes de soja y maní.",
+      "foto": { "url": "https://recipe1.ezmember.co.kr/cache/recipe/2023/05/17/0ac05e840af885eb7d1f8fa0b26dbe221.jpg"},
+      "ingredientes": ["Fideos de arroz", "Camarones", "Tofu", "Brotes de soja", "Maní"],
+      "region": "Tailandia",
+      "precio": 7.00,
+      "categoria": "Plato principal"
+    },
+    {
+      "id": 10,
+      "nombre": "Shawarma",
+      "descripcion": "Carne asada al estilo árabe servida en pan pita con vegetales y salsas.",
+      "foto": { "url": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/c9/f0/5d/shawarma-tortia.jpg?w=900&h=500&s=1"},
+      "ingredientes": ["Carne de cordero o pollo", "Pan pita", "Tomate", "Lechuga", "Tahini"],
+      "region": "Medio Oriente",
+      "precio": 5.50,
+      "categoria": "Plato principal"
+    }
+  ],
+  "moneda": "USD"
+}
