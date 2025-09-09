@@ -5,8 +5,6 @@ Este repositorio contiene dos aplicaciones móviles desarrolladas en **React Nat
 - 📅 **Ejercicio 1:** App de Registro de Citas para Reparar tu Coche  
 - 🍲 **Ejercicio 2:** App para Visualizar Platillos Típicos de Varios Países
 
-Encuentra a continuación una guía profesional para la instalación y ejecución de cada aplicación.
-
 ---
 
 ## 📋 Requisitos Previos
