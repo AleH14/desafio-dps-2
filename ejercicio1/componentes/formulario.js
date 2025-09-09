@@ -7,11 +7,17 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import shortid from 'react-id-generator';
 
-const Formulario = ({ citas, setCitas, guardarCitasStorage, navigation }) => {
+const Formulario = ({ citas, setCitas, guardarCitasStorage, navigation, orientation, screenData }) => {
+  const insets = useSafeAreaInsets();
+  
   const [nombre, setNombre] = useState('');
   const [modelo, setModelo] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -57,6 +63,16 @@ const Formulario = ({ citas, setCitas, guardarCitasStorage, navigation }) => {
     hideTimePicker();
   };
 
+  // Función para validar y filtrar solo letras y espacios
+  const manejarCambioNombre = (texto) => {
+    // Expresión regular que permite solo letras (incluyendo acentos) y espacios
+    const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]*$/;
+    
+    if (soloLetras.test(texto)) {
+      setNombre(texto);
+    }
+  };
+
   const crearNuevaCita = () => {
     if (!nombre || !modelo || !fecha || !hora || !descripcion) {
       return Alert.alert('Error', 'Todos los campos son obligatorios');
@@ -64,6 +80,13 @@ const Formulario = ({ citas, setCitas, guardarCitasStorage, navigation }) => {
     if (nombre.trim().length < 3) {
       return Alert.alert('Error', 'El nombre debe tener al menos 3 caracteres');
     }
+    
+    // Validar que el nombre solo contenga letras y espacios
+    const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+    if (!soloLetras.test(nombre.trim())) {
+      return Alert.alert('Error', 'El nombre solo puede contener letras y espacios');
+    }
+    
     if (!fechaCompleta || fechaCompleta <= new Date()) {
       return Alert.alert('Error', 'La fecha y hora deben ser posteriores al momento actual');
     }
@@ -90,16 +113,46 @@ const Formulario = ({ citas, setCitas, guardarCitasStorage, navigation }) => {
     navigation.navigate('Home');
   };
 
+  // Obtener información de orientación
+  const isLandscape = orientation === 'landscape';
+  const screenWidth = screenData ? screenData.width : Dimensions.get('window').width;
+  
+  // Calcular estilos dinámicos basados en orientación
+  const dynamicStyles = {
+    formulario: {
+      paddingHorizontal: isLandscape ? screenWidth * 0.15 : 20,
+    },
+    contenedorCampos: {
+      maxWidth: isLandscape ? 600 : '100%',
+      alignSelf: 'center',
+      width: '100%',
+    },
+  };
+
   return (
-    <ScrollView style={styles.formulario} keyboardShouldPersistTaps="handled">
-      <View style={styles.contenedorCampos}>
-        <Text style={styles.label}>Nombre:</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={setNombre}
-          value={nombre}
-          placeholder="Nombre del cliente"
-        />
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
+        <ScrollView 
+          style={[styles.formulario, dynamicStyles.formulario]} 
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ 
+            paddingBottom: Math.max(insets.bottom + 30, 50) 
+          }}
+        >
+          <View style={[styles.contenedorCampos, dynamicStyles.contenedorCampos]}>
+            <Text style={styles.titulo}>Nueva Cita</Text>
+            <Text style={styles.label}>Nombre:</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={manejarCambioNombre}
+              value={nombre}
+              placeholder="Solo letras y espacios"
+              keyboardType="default"
+            />
 
         <Text style={styles.label}>Modelo:</Text>
         <TextInput
@@ -143,23 +196,34 @@ const Formulario = ({ citas, setCitas, guardarCitasStorage, navigation }) => {
           placeholder="Descripción del servicio"
         />
 
-        <TouchableOpacity style={styles.botonAccion} onPress={crearNuevaCita}>
-          <Text style={styles.textoBoton}>Registrar nueva cita</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+            <TouchableOpacity style={styles.botonAccion} onPress={crearNuevaCita}>
+              <Text style={styles.textoBoton}>Registrar nueva cita</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
+  },
   formulario: {
     flex: 1,
     backgroundColor: '#f9f9f9',
-    paddingHorizontal: 20,
   },
   contenedorCampos: {
-    flex: 1,
     paddingVertical: 20,
+  },
+  titulo: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 25,
+    textAlign: 'center',
   },
   label: {
     fontWeight: '600',
@@ -193,6 +257,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   botonAccion: {
     backgroundColor: '#198D70',
@@ -200,7 +269,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 40,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

@@ -5,26 +5,27 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   Dimensions,
   Alert,
   Platform,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const HomeScreen = ({ citas, navigation, setCitas, orientation,guardarCitasStorage }) => {
-  const [screenData, setScreenData] = useState(Dimensions.get('window'));
-
-  useEffect(() => {
-    const onChange = ({ window }) => {
-      setScreenData(window);
-    };
-    const subscription = Dimensions.addEventListener('change', onChange);
-    return () => subscription?.remove();
-  }, []);
-
-  const isLandscape = screenData.width > screenData.height;
-   const numColumns = orientation === 'landscape' ? 2 : 1;
+const HomeScreen = ({ citas, navigation, setCitas, orientation, screenData, guardarCitasStorage }) => {
+  // Usar safe area insets
+  const insets = useSafeAreaInsets();
+  
+  // Usar la información de orientación y pantalla desde App.js
+  const isLandscape = orientation === 'landscape';
+  const numColumns = isLandscape ? 2 : 1;
+  
+  // Calcular el ancho disponible para las columnas
+  const screenWidth = screenData ? screenData.width : Dimensions.get('window').width;
+  const padding = 20;
+  const columnWidth = isLandscape 
+    ? (screenWidth - padding * 3) / 2  // Espacio para 2 columnas más padding
+    : screenWidth - padding * 2;       // Una columna con padding lateral
 
 
   const eliminarCitaPorId = (id) => {
@@ -66,7 +67,7 @@ const HomeScreen = ({ citas, navigation, setCitas, orientation,guardarCitasStora
   );
 
   return (
-    <SafeAreaView style={styles.contenedor}>
+    <SafeAreaView style={styles.contenedor} edges={['top', 'left', 'right']}>
       <View style={styles.listado}>
         <Text style={styles.titulo}>Citas Registradas</Text>
 
@@ -76,16 +77,21 @@ const HomeScreen = ({ citas, navigation, setCitas, orientation,guardarCitasStora
           <FlatList
             data={citasSinDuplicados}
             keyExtractor={(item) => item.id}
-            key={numColumns}
+            key={`${numColumns}-${orientation}`}
             numColumns={numColumns}
-            orientation={orientation}
             columnWrapperStyle={numColumns > 1 ? styles.filaHorizontal : null}
-            contentContainerStyle={{ paddingBottom: 150 }}
+            contentContainerStyle={{ 
+              paddingBottom: Math.max(insets.bottom + 120, 150)
+            }}
+            extraData={orientation}
             renderItem={({ item }) => (
               <View
                 style={[
                   styles.cita,
-                  numColumns > 1 ? styles.columnaDoble : styles.columnaUnica,
+                  {
+                    width: isLandscape ? '48%' : '100%',
+                    marginBottom: isLandscape ? 10 : 15,
+                  }
                 ]}
               >
                 <Text style={styles.label}>Cliente: {item.nombre}</Text>
@@ -116,7 +122,10 @@ const HomeScreen = ({ citas, navigation, setCitas, orientation,guardarCitasStora
 
       {/* Botón flotante */}
       <TouchableOpacity
-        style={styles.botonFlotante}
+        style={[
+          styles.botonFlotante,
+          { bottom: Math.max(insets.bottom + 20, 30) }
+        ]}
         onPress={() => navigation.navigate('Formulario')}
       >
         <Text style={styles.textoBoton}>Registrar nueva cita</Text>
@@ -139,6 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
+    textAlign: 'center',
   },
   sinCitas: {
     fontSize: 16,
@@ -148,28 +158,31 @@ const styles = StyleSheet.create({
   },
   filaHorizontal: {
     justifyContent: 'space-between',
+    paddingHorizontal: 5,
   },
   cita: {
     backgroundColor: '#fff',
     padding: 15,
-    marginBottom: 15,
     borderRadius: 10,
     elevation: 3,
-  },
-  columnaUnica: {
-    width: '100%',
-  },
-  columnaDoble: {
-    width: '48%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   label: {
     fontWeight: 'bold',
     marginBottom: 5,
     color: '#444',
+    fontSize: 16,
   },
   texto: {
     marginBottom: 3,
     color: '#555',
+    fontSize: 14,
   },
   acciones: {
     flexDirection: 'row',
@@ -189,13 +202,19 @@ const styles = StyleSheet.create({
   },
   botonFlotante: {
     position: 'absolute',
-    bottom: 30,
     right: 20,
     backgroundColor: '#5cb85c',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 30,
     elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   textoBoton: {
     color: '#fff',

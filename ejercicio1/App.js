@@ -6,45 +6,52 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeScreen from './componentes/homeScreen';
 import Formulario from './componentes/formulario';
 import EditarCita from './componentes/editarCitas';
-import { Dimensions } from 'react-native';  
+import { Dimensions } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';  
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [citas, setCitas] = useState([]);
+  const [orientation, setOrientation] = useState('portrait');
+  const [screenData, setScreenData] = useState(Dimensions.get('window'));
 
   // Cargar citas desde AsyncStorage
   useEffect(() => {
-  const cargarCitas = async () => {
-    try {
-      const citasStorage = await AsyncStorage.getItem('citas');
-      const citasParseadas = JSON.parse(citasStorage);
+    const cargarCitas = async () => {
+      try {
+        const citasStorage = await AsyncStorage.getItem('citas');
+        const citasParseadas = JSON.parse(citasStorage);
 
-      if (Array.isArray(citasParseadas)) {
-        setCitas(citasParseadas);
-      } else {
-        setCitas([]); // fallback si no es array
+        if (Array.isArray(citasParseadas)) {
+          setCitas(citasParseadas);
+        } else {
+          setCitas([]); // fallback si no es array
+        }
+      } catch (error) {
+        console.log('Error al cargar citas:', error);
+        setCitas([]); // fallback en caso de error
       }
-    } catch (error) {
-      console.log('Error al cargar citas:', error);
-      setCitas([]); // fallback en caso de error
-    }
-  };
-  cargarCitas();
-}, []);
+    };
+    cargarCitas();
+  }, []);
 
-
-
-const [orientation, setOrientation] = useState('portrait');
-
-useEffect(() => {
-  const onChange = ({ window }) => {
-    const isLandscape = window.width > window.height;
-    setOrientation(isLandscape ? 'landscape' : 'portrait');
-  };
-  const subscription = Dimensions.addEventListener('change', onChange);
-  return () => subscription?.remove();
-}, []);
+  // Gestión global de orientación y dimensiones de pantalla
+  useEffect(() => {
+    const updateDimensions = (data) => {
+      const { window } = data;
+      const isLandscape = window.width > window.height;
+      setOrientation(isLandscape ? 'landscape' : 'portrait');
+      setScreenData(window);
+    };
+    
+    // Establecer orientación inicial
+    const initialData = Dimensions.get('window');
+    updateDimensions({ window: initialData });
+    
+    const subscription = Dimensions.addEventListener('change', updateDimensions);
+    return () => subscription?.remove();
+  }, []);
 
   // Guardar citas en AsyncStorage
   const guardarCitasStorage = async (nuevasCitas) => {
@@ -56,20 +63,22 @@ useEffect(() => {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
        <Stack.Screen
           name="Home"
           options={{
             title: 'Punto Motor', 
             headerStyle: {
-              backgroundColor: '#198D70', // Color de fondo del encabezado
+              backgroundColor: '#808080', // Color de fondo gris
             },
-            headerTintColor: '#fff', // Color del texto y los íconos
+            headerTintColor: '#000000', // Color del texto negro
             headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 20,
               letterSpacing: 1,
+              color: '#000000', // Asegurar que el título sea negro
             },
           }}
 >
@@ -80,6 +89,8 @@ useEffect(() => {
               citas={citas}
               setCitas={setCitas}
               guardarCitasStorage={guardarCitasStorage}
+              orientation={orientation}
+              screenData={screenData}
             />
           )}
         </Stack.Screen>
@@ -90,22 +101,27 @@ useEffect(() => {
               citas={citas}
               setCitas={setCitas}
               guardarCitasStorage={guardarCitasStorage}
+              orientation={orientation}
+              screenData={screenData}
             />
           )}
         </Stack.Screen>
         <Stack.Screen name="EditarCita">
-        {(props) => (
-          <EditarCita
-            {...props}
-            citas={citas}
-            setCitas={setCitas}
-            guardarCitasStorage={guardarCitasStorage}
-          />
-        )}
-      </Stack.Screen>
+          {(props) => (
+            <EditarCita
+              {...props}
+              citas={citas}
+              setCitas={setCitas}
+              guardarCitasStorage={guardarCitasStorage}
+              orientation={orientation}
+              screenData={screenData}
+            />
+          )}
+        </Stack.Screen>
 
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </NavigationContainer>
+        </Stack.Navigator>
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
