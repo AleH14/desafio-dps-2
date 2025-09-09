@@ -68,7 +68,7 @@ Aplicación móvil para explorar una variedad de platillos típicos de diferente
 
 ### ⚙️ Instalación
 
-1. Accede al directorio correspondiente al ejercicio 2 (por ejemplo, `/ejercicio2`):
+1. Accede al directorio correspondiente al ejercicio 2 (por ejemplo, `/ejercicio-2`):
 
    ```bash
    cd ejercicio-2
